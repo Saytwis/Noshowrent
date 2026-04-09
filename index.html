@@ -619,12 +619,43 @@ body {
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 768px) {
   .hero, .travel-strip, .filters-wrap, .res-bar, .grid, .comp-bar { padding-left: 16px; padding-right: 16px; }
-  .hero { padding-top: 32px; }
-  .filters { flex-direction: column; }
+  .hero { padding-top: 28px; }
+  .hero-eyebrow { font-size: 10px; letter-spacing: 1px; }
+  .hero-title { font-size: 30px; }
+  .hero-title br { display: none; }
+  .hero-sub { font-size: 12px; }
+  .live-counter { padding: 8px 14px; gap: 8px; }
+  .counter-number { font-size: 16px; }
+  .counter-label { font-size: 11px; }
+  .live-feed { height: 28px; }
+  .feed-item { height: 28px; font-size: 11px; }
+  .filters { flex-direction: column; padding: 14px 16px; gap: 10px; }
   .fg { min-width: 100%; }
-  .grid { grid-template-columns: 1fr; }
-  .travel-inner { flex-direction: column; align-items: flex-start; }
+  .search-btn { width: 100%; text-align: center; padding: 12px; }
+  .grid { grid-template-columns: 1fr; gap: 14px; margin-bottom: 40px; }
+  .card-img { height: 140px; }
+  .card-body { padding: 12px 14px 14px; }
+  .card-price { font-size: 20px; }
+  .card-pills { gap: 4px; }
+  .pill { font-size: 10px; padding: 2px 6px; }
+  .travel-inner { flex-direction: column; align-items: flex-start; padding: 14px 18px; gap: 12px; }
   .travel-tag { margin-left: 0; }
+  .travel-pin { width: 30px; height: 30px; font-size: 15px; }
+  .travel-details h3 { font-size: 12px; }
+  .travel-details p { font-size: 10px; }
+  .res-bar { flex-direction: column; gap: 8px; align-items: flex-start; }
+  .sort-sel { width: 100%; }
+  .b { font-size: 9px; padding: 2px 6px; }
+  .t-badge { font-size: 9px; padding: 3px 7px; }
+}
+
+@media (max-width: 380px) {
+  .hero-title { font-size: 26px; }
+  .live-counter { flex-wrap: wrap; gap: 6px; }
+  .card-img { height: 120px; }
+  .card-price { font-size: 18px; }
+  .card-ph-letter { font-size: 34px; }
+  .card-ph-text { font-size: 9px; }
 }
 </style>
 </head>
@@ -653,7 +684,7 @@ body {
     </div>
   </div>
 
-  <p class="hero-sub">Scraped from Housing.com · MagicBricks · 99acres · NoBroker — updated daily da :)</p>
+  <p class="hero-sub">Scraped from Housing.com · MagicBricks · 99acres · NoBroker — updated daily</p>
 </div>
 
 <!-- TRAVEL STRIP -->
@@ -662,7 +693,7 @@ body {
     <div class="travel-pin">📍</div>
     <div class="travel-details">
       <h3>St. Joseph's University, Lal Bagh Main Rd</h3>
-      <p>Langford Gardens, Bengaluru 560027 · Drive time via OSRM</p>
+      <p>Langford Gardens, Bengaluru 560027</p>
     </div>
     <div class="travel-tag">≤ 25 min drive</div>
   </div>
@@ -799,24 +830,40 @@ setInterval(randomFeed, 12000);
 // ═══════════════════════════════════════════════════════════════
 // GEOCODE locality → lat/lng via Photon (OSM)
 // ═══════════════════════════════════════════════════════════════
+
+// Bangalore bounding box (strict)
+const BLR_BBOX = { minLat: 12.75, maxLat: 13.20, minLng: 77.35, maxLng: 77.85 };
+
 async function geocode(locality, area) {
-  const query = [locality, area, 'Bangalore'].filter(Boolean).join(', ');
-  const cacheKey = query.toLowerCase().trim();
+  // Build query — try most specific first
+  const queries = [];
+  if (locality && area) queries.push(`${locality}, ${area}, Bengaluru, Karnataka`);
+  if (area) queries.push(`${area}, Bengaluru, Karnataka`);
+  if (locality) queries.push(`${locality}, Bengaluru, Karnataka`);
+  
+  const cacheKey = (locality + '|' + area).toLowerCase().trim();
   if (geoCache[cacheKey]) return geoCache[cacheKey];
 
-  try {
-    const url = `${PHOTON}?q=${encodeURIComponent(query)}&lat=12.97&lon=77.59&limit=1`;
-    const r = await fetch(url);
-    const d = await r.json();
-    if (d.features && d.features.length > 0) {
-      const [lng, lat] = d.features[0].geometry.coordinates;
-      // Sanity check — must be in Bangalore area (12.7-13.2 lat, 77.3-77.9 lng)
-      if (lat > 12.5 && lat < 13.3 && lng > 77.2 && lng < 78.0) {
-        geoCache[cacheKey] = { lat, lng };
-        return { lat, lng };
+  for (const q of queries) {
+    try {
+      const url = `${PHOTON}?q=${encodeURIComponent(q)}&bbox=${BLR_BBOX.minLng},${BLR_BBOX.minLat},${BLR_BBOX.maxLng},${BLR_BBOX.maxLat}&limit=3&lang=en`;
+      const r = await fetch(url);
+      const d = await r.json();
+      if (d.features && d.features.length > 0) {
+        // Pick the first result that's actually in Bangalore
+        for (const f of d.features) {
+          const [lng, lat] = f.geometry.coordinates;
+          if (lat >= BLR_BBOX.minLat && lat <= BLR_BBOX.maxLat && 
+              lng >= BLR_BBOX.minLng && lng <= BLR_BBOX.maxLng) {
+            geoCache[cacheKey] = { lat, lng };
+            return { lat, lng };
+          }
+        }
       }
-    }
-  } catch {}
+    } catch {}
+  }
+  // Mark as failed so we don't retry
+  geoCache[cacheKey] = null;
   return null;
 }
 
@@ -989,7 +1036,8 @@ function render(list) {
 
     const loc = [l.locality, l.area].filter(Boolean).join(', ') || 'Bangalore';
 
-    return `<div class="card" onclick="window.open('${l.link||'#'}','_blank')">
+    const hasLink = l.link && l.link.startsWith('http');
+    return `<div class="card"${hasLink ? ` onclick="window.open('${l.link}','_blank')" style="cursor:pointer"` : ' style="cursor:default"'}>>
       <div class="card-img">${img}<div class="card-badges">${bd.join('')}</div>${tvH}</div>
       <div class="card-body">
         <div class="card-price">${fmt(l.rent)} <small>/mo</small></div>
