@@ -409,6 +409,14 @@ body {
   background: var(--bg-filter);
   position: relative;
   overflow: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+.card-img .card-ph {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
 .card-img img {
@@ -422,7 +430,15 @@ body {
 
 .card:hover .card-img img { transform: scale(1.06); }
 
-.hide-ph { display: none; }
+.card-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  z-index: 3;
+}
 
 .card-ph {
   width: 100%;
@@ -432,7 +448,6 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  position: relative;
 }
 
 .card-ph.ph-0 { background: linear-gradient(135deg, #E8E4DF, #D6D0C8); }
@@ -442,22 +457,11 @@ body {
 .card-ph.ph-4 { background: linear-gradient(135deg, #E4E0DD, #CEC8C2); }
 .card-ph.ph-5 { background: linear-gradient(135deg, #DDE0E4, #C2C8CE); }
 
-.card-ph::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(212,85,42,0.06) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(28,25,23,0.04) 0%, transparent 40%);
-}
-
 .card-ph-letter {
   font-family: 'Instrument Serif', serif;
   font-size: 42px;
   color: rgba(28,25,23,0.12);
   line-height: 1;
-  position: relative;
-  z-index: 1;
 }
 
 .card-ph-text {
@@ -466,17 +470,6 @@ body {
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: rgba(28,25,23,0.18);
-  position: relative;
-  z-index: 1;
-}
-
-.card-badges {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
 }
 
 .b {
@@ -507,6 +500,7 @@ body {
   align-items: center;
   gap: 3px;
   color: white;
+  z-index: 3;
 }
 
 .t-badge.in { background: rgba(22,163,74,0.88); }
@@ -1131,38 +1125,51 @@ function renderCard(l) {
   const phLetter = (l.locality || l.area || 'B').charAt(0).toUpperCase();
   const phLabel = (l.locality || l.area || 'Bangalore').substring(0, 20);
   const phColor = 'ph-' + (((l.locality||'').length + (l.bhk||0)) % 6);
-  const ph = `<div class="card-ph ${phColor}"><div class="card-ph-letter">${phLetter}</div><div class="card-ph-text">${phLabel}</div></div>`;
-  const img = (l.images && l.images.length)
-    ? `<img src="${l.images[0]}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML='${ph.replace(/'/g,"\\'")}';">`
-    : ph;
+
+  // If has image, use it as background-image on card-img (no onerror drama)
+  // Placeholder shows through if image fails since it's underneath
+  let imgStyle = '';
+  let imgInner = '';
+  if (l.images && l.images.length) {
+    imgStyle = ` style="background-image:url('${l.images[0].replace(/'/g, "\\'")}');background-size:cover;background-position:center;"`;
+  }
+  // Always render placeholder underneath (visible if no image or image fails)
+  imgInner = `<div class="card-ph ${phColor}"><div class="card-ph-letter">${phLetter}</div><div class="card-ph-text">${phLabel}</div></div>`;
 
   const bd = [];
   if (l.verified) bd.push('<span class="b b-v">Verified</span>');
   if (l.posted_by==='Owner') bd.push('<span class="b b-o">Owner</span>');
-  if (l.source) bd.push(`<span class="b b-s">${l.source}</span>`);
+  if (l.source) bd.push('<span class="b b-s">' + l.source + '</span>');
 
   const pills = [];
-  if (l.bhk) pills.push(`${l.bhk} BHK`);
-  if (l.sqft) pills.push(`${l.sqft.toLocaleString()} sqft`);
+  if (l.bhk) pills.push(l.bhk + ' BHK');
+  if (l.sqft) pills.push(l.sqft.toLocaleString() + ' sqft');
   if (l.furnishing) pills.push(l.furnishing);
   if (l.property_type && l.property_type!=='Apartment') pills.push(l.property_type);
 
   const loc = [l.locality, l.area].filter(Boolean).join(', ') || 'Bangalore';
 
+  // Sanitize link - escape quotes for onclick
+  const safeLink = (l.link || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
   const hasLink = l.link && l.link.startsWith('http');
-  return `<div class="card"${hasLink ? ` onclick="window.open('${l.link}','_blank')" style="cursor:pointer"` : ' style="cursor:default"'}>
-    <div class="card-img">${img}<div class="card-badges">${bd.join('')}</div>${tvH}</div>
-    <div class="card-body">
-      <div class="card-price">${fmt(l.rent)} <small>/mo</small></div>
-      <div class="card-pills">${pills.map(p=>`<span class="pill">${p}</span>`).join('')}</div>
-      <div class="card-loc">${l.society||loc}</div>
-      ${l.society?`<div class="card-area">${loc}</div>`:'<div class="card-area"></div>'}
-      <div class="card-foot">
-        <span class="card-seller">${l.seller_name||l.posted_by||''}</span>
-        <span class="card-upd">${l.updated_ago||''}</span>
-      </div>
-    </div>
-  </div>`;
+  const clickAttr = hasLink ? ' onclick="window.open(\'' + safeLink + '\',\'_blank\')"' : '';
+  const cursorStyle = hasLink ? 'cursor:pointer' : 'cursor:default';
+
+  return '<div class="card" style="' + cursorStyle + '"' + clickAttr + '>' +
+    '<div class="card-img"' + imgStyle + '>' + imgInner +
+      '<div class="card-badges">' + bd.join('') + '</div>' + tvH +
+    '</div>' +
+    '<div class="card-body">' +
+      '<div class="card-price">' + fmt(l.rent) + ' <small>/mo</small></div>' +
+      '<div class="card-pills">' + pills.map(function(p){ return '<span class="pill">' + p + '</span>'; }).join('') + '</div>' +
+      '<div class="card-loc">' + (l.society || loc) + '</div>' +
+      (l.society ? '<div class="card-area">' + loc + '</div>' : '<div class="card-area"></div>') +
+      '<div class="card-foot">' +
+        '<span class="card-seller">' + (l.seller_name || l.posted_by || '') + '</span>' +
+        '<span class="card-upd">' + (l.updated_ago || '') + '</span>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
 }
 
 function render(list) {
