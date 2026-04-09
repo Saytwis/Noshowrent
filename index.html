@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bangalore Rentals</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAFAF7;
+  --bg-card: #FFFFFF;
+  --bg-filter: #F3F1ED;
+  --text: #1C1917;
+  --text-2: #57534E;
+  --text-3: #A8A29E;
+  --accent: #D4552A;
+  --accent-light: #FDF2EF;
+  --accent-hover: #B8421F;
+  --green: #16A34A;
+  --green-light: #F0FDF4;
+  --red-muted: #B45A4A;
+  --border: #E7E5E4;
+  --border-light: #F0EEEB;
+  --shadow-card: 0 1px 3px rgba(28,25,23,0.03), 0 0 0 1px rgba(28,25,23,0.04);
+  --shadow-hover: 0 16px 40px rgba(28,25,23,0.1), 0 0 0 1px rgba(28,25,23,0.06);
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══ HERO / HEADER ═══ */
+.hero {
+  padding: 48px 40px 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+
+.hero-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* ═══ LIVE COUNTER ═══ */
+.live-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--text);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 40px;
+  margin-bottom: 12px;
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: #4ADE80;
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(74,222,128,0); }
+}
+
+.counter-number {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 55px;
+  text-align: right;
+}
+
+.counter-label {
+  font-size: 13px;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+/* ═══ LIVE FEED TICKER ═══ */
+.live-feed {
+  height: 32px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.feed-track {
+  animation: feed-scroll 12s ease-in-out infinite;
+}
+
+.feed-item {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.feed-item .feed-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.feed-dot.added { background: var(--green); }
+.feed-dot.rented { background: var(--accent); }
+
+.feed-item .feed-action {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.feed-action.added { color: var(--green); }
+.feed-action.rented { color: var(--accent); }
+
+.feed-item .feed-detail {
+  color: var(--text-3);
+  font-size: 12px;
+}
+
+@keyframes feed-scroll {
+  0%, 15%    { transform: translateY(0); }
+  20%, 35%   { transform: translateY(-32px); }
+  40%, 55%   { transform: translateY(-64px); }
+  60%, 75%   { transform: translateY(-96px); }
+  80%, 95%   { transform: translateY(-128px); }
+  100%       { transform: translateY(-160px); }
+}
+
+.hero-sub {
+  font-size: 14px;
+  color: var(--text-3);
+  margin-top: 4px;
+}
+
+/* ═══ TRAVEL STRIP ═══ */
+.travel-strip {
+  max-width: 1400px;
+  margin: 28px auto 0;
+  padding: 0 40px;
+}
+
+.travel-inner {
+  background: linear-gradient(135deg, #1C1917 0%, #292524 100%);
+  border-radius: var(--r-lg);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.travel-pin {
+  width: 36px;
+  height: 36px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.travel-details h3 {
+  color: #FAFAF7;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.travel-details p {
+  color: rgba(250,250,247,0.4);
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.travel-tag {
+  margin-left: auto;
+  background: var(--accent);
+  color: white;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* ═══ FILTERS ═══ */
+.filters-wrap {
+  max-width: 1400px;
+  margin: 20px auto 0;
+  padding: 0 40px;
+}
+
+.filters {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 18px 22px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  box-shadow: var(--shadow-card);
+}
+
+.fg {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 130px;
+}
+
+.fg label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.fg select,
+.fg input {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.fg select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23A8A29E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+
+.fg select:focus, .fg input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.fg input::placeholder { color: var(--text-3); }
+
+.search-btn {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.search-btn:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212,85,42,0.25);
+}
+
+/* ═══ COMPUTING BAR ═══ */
+.comp-bar {
+  max-width: 1400px;
+  margin: 10px auto 0;
+  padding: 0 40px;
+  display: none;
+}
+
+.comp-bar.on { display: block; }
+
+.comp-inner {
+  background: var(--accent-light);
+  border-radius: var(--r-sm);
+  padding: 9px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.mini-spin {
+  width: 12px; height: 12px;
+  border: 2px solid var(--accent-light);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.comp-prog { margin-left: auto; font-size: 11px; opacity: 0.7; }
+
+/* ═══ RESULTS BAR ═══ */
+.res-bar {
+  max-width: 1400px;
+  margin: 20px auto 0;
+  padding: 0 40px;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.res-bar.on { display: flex; }
+
+.res-count {
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.res-count strong { color: var(--text); font-weight: 600; }
+
+.sort-sel {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  padding: 5px 24px 5px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text-2);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%23A8A29E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 7px center;
+}
+
+/* ═══ GRID ═══ */
+.grid {
+  max-width: 1400px;
+  margin: 16px auto 80px;
+  padding: 0 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
+}
+
+/* ═══ CARD ═══ */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+  cursor: pointer;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-5px);
+}
+
+.card-img {
+  width: 100%;
+  height: 190px;
+  background: var(--bg-filter);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+
+.card:hover .card-img img { transform: scale(1.06); }
+
+.card-ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #F3F1ED 0%, #E7E5E0 100%);
+  font-size: 36px;
+  opacity: 0.25;
+}
+
+.card-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.b {
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.b-v { background: rgba(22,163,74,0.88); color: white; }
+.b-s { background: rgba(28,25,23,0.65); color: white; }
+.b-o { background: rgba(212,85,42,0.88); color: white; }
+
+.t-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: white;
+}
+
+.t-badge.in { background: rgba(22,163,74,0.88); }
+.t-badge.out { background: rgba(180,90,74,0.8); }
+
+.card-body {
+  padding: 14px 16px 16px;
+}
+
+.card-price {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  color: var(--text);
+  margin-bottom: 2px;
+  letter-spacing: -0.3px;
+}
+
+.card-price small {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-3);
+  letter-spacing: 0;
+}
+
+.card-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+
+.pill {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-2);
+  background: var(--bg-filter);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.card-loc {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-area {
+  font-size: 11px;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-light);
+}
+
+.card-seller {
+  font-size: 11px;
+  color: var(--text-3);
+  max-width: 55%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-upd {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+/* ═══ EMPTY ═══ */
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 70px 20px;
+}
+
+.empty-ico { font-size: 44px; margin-bottom: 14px; opacity: 0.35; }
+
+.empty h3 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.empty p { font-size: 13px; color: var(--text-3); max-width: 360px; margin: 0 auto; line-height: 1.5; }
+
+/* ═══ LOADING ═══ */
+.ld { grid-column: 1 / -1; text-align: center; padding: 70px 20px; }
+
+.ld-spin {
+  width: 32px; height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 14px;
+}
+
+.ld p { font-size: 13px; color: var(--text-3); }
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  .hero, .travel-strip, .filters-wrap, .res-bar, .grid, .comp-bar { padding-left: 16px; padding-right: 16px; }
+  .hero { padding-top: 32px; }
+  .filters { flex-direction: column; }
+  .fg { min-width: 100%; }
+  .grid { grid-template-columns: 1fr; }
+  .travel-inner { flex-direction: column; align-items: flex-start; }
+  .travel-tag { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Bangalore Rentals</div>
+  <h1 class="hero-title">Find your next <em>home</em>,<br>without the bullshit.</h1>
+
+  <div class="live-counter">
+    <div class="live-dot"></div>
+    <span class="counter-number" id="counter">7,476</span>
+    <span class="counter-label">real listings scraped</span>
+  </div>
+
+  <div class="live-feed">
+    <div class="feed-track" id="feed-track">
+      <div class="feed-item"><div class="feed-dot added"></div><span class="feed-action added">Added</span> 2 BHK in Koramangala — ₹28,000 <span class="feed-detail">via Housing.com</span></div>
+      <div class="feed-item"><div class="feed-dot rented"></div><span class="feed-action rented">Rented</span> 1 BHK in HSR Layout — ₹18,500 <span class="feed-detail">via NoBroker</span></div>
+      <div class="feed-item"><div class="feed-dot added"></div><span class="feed-action added">Added</span> 3 BHK in Whitefield — ₹55,000 <span class="feed-detail">via MagicBricks</span></div>
+      <div class="feed-item"><div class="feed-dot rented"></div><span class="feed-action rented">Rented</span> 2 BHK in Indiranagar — ₹42,000 <span class="feed-detail">via 99acres</span></div>
+      <div class="feed-item"><div class="feed-dot added"></div><span class="feed-action added">Added</span> 1 BHK in BTM Layout — ₹15,000 <span class="feed-detail">via Housing.com</span></div>
+      <!-- clone first for seamless loop -->
+      <div class="feed-item"><div class="feed-dot added"></div><span class="feed-action added">Added</span> 2 BHK in Koramangala — ₹28,000 <span class="feed-detail">via Housing.com</span></div>
+    </div>
+  </div>
+
+  <p class="hero-sub">Scraped from Housing.com · MagicBricks · 99acres · NoBroker — updated daily</p>
+</div>
+
+<!-- TRAVEL STRIP -->
+<div class="travel-strip">
+  <div class="travel-inner">
+    <div class="travel-pin">📍</div>
+    <div class="travel-details">
+      <h3>St. Joseph's University, Lal Bagh Main Rd</h3>
+      <p>Langford Gardens, Bengaluru 560027 · Drive time via OSRM</p>
+    </div>
+    <div class="travel-tag">≤ 25 min drive</div>
+  </div>
+</div>
+
+<!-- FILTERS -->
+<div class="filters-wrap">
+  <div class="filters">
+    <div class="fg">
+      <label>BHK</label>
+      <select id="f-bhk">
+        <option value="">All</option>
+        <option value="1">1 BHK</option>
+        <option value="2">2 BHK</option>
+        <option value="3">3 BHK</option>
+        <option value="4">4 BHK</option>
+        <option value="5">5+ BHK</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Min Budget</label>
+      <input type="number" id="f-min" placeholder="₹ 5,000" step="1000">
+    </div>
+    <div class="fg">
+      <label>Max Budget</label>
+      <input type="number" id="f-max" placeholder="₹ 80,000" step="1000">
+    </div>
+    <div class="fg">
+      <label>Furnishing</label>
+      <select id="f-furn">
+        <option value="">All</option>
+        <option value="fully">Fully Furnished</option>
+        <option value="semi">Semi Furnished</option>
+        <option value="un">Unfurnished</option>
+      </select>
+    </div>
+    <div class="fg">
+      <label>Source</label>
+      <select id="f-src">
+        <option value="">All Sites</option>
+        <option value="housing.com">Housing.com</option>
+        <option value="magicbricks">MagicBricks</option>
+        <option value="99acres">99acres</option>
+        <option value="nobroker">NoBroker</option>
+      </select>
+    </div>
+    <button class="search-btn" onclick="go()">Search</button>
+  </div>
+</div>
+
+<!-- COMPUTING BAR -->
+<div class="comp-bar" id="comp-bar">
+  <div class="comp-inner">
+    <div class="mini-spin"></div>
+    <span>Computing drive times from St. Joseph's University...</span>
+    <span class="comp-prog" id="comp-prog">0 / 0</span>
+  </div>
+</div>
+
+<!-- RESULTS BAR -->
+<div class="res-bar" id="res-bar">
+  <div class="res-count" id="res-count"></div>
+  <select class="sort-sel" id="sort-sel" onchange="go()">
+    <option value="price-asc">Price: Low → High</option>
+    <option value="price-desc">Price: High → Low</option>
+    <option value="travel-asc">Nearest to College</option>
+    <option value="sqft-desc">Largest First</option>
+  </select>
+</div>
+
+<!-- GRID -->
+<div class="grid" id="grid">
+  <div class="ld" id="ld">
+    <div class="ld-spin"></div>
+    <p>Loading listings...</p>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════════════════
+const SJ = { lat: 12.9386, lng: 77.5866 }; // St Joseph's University, Lal Bagh Main Rd
+const MAX_MIN = 25;
+const OSRM = 'https://router.project-osrm.org/route/v1/driving';
+const PHOTON = 'https://photon.komoot.io/api';
+
+let all = [], filtered = [], tt = {}, geoCache = {};
+
+// ═══════════════════════════════════════════════════════════════
+// ANIMATED COUNTER
+// ═══════════════════════════════════════════════════════════════
+const counterEl = document.getElementById('counter');
+let counterVal = 7476;
+
+function tickCounter() {
+  const delta = Math.random() < 0.6 ? 1 : -1;
+  counterVal = Math.max(7000, counterVal + delta);
+  counterEl.style.transition = 'transform 0.3s, opacity 0.3s';
+  counterEl.style.transform = delta > 0 ? 'translateY(-4px)' : 'translateY(4px)';
+  counterEl.style.opacity = '0.4';
+  setTimeout(() => {
+    counterEl.textContent = counterVal.toLocaleString('en-IN');
+    counterEl.style.transform = 'translateY(0)';
+    counterEl.style.opacity = '1';
+  }, 150);
+}
+setInterval(tickCounter, 3000 + Math.random() * 2000);
+
+// ═══════════════════════════════════════════════════════════════
+// RANDOMIZE FEED
+// ═══════════════════════════════════════════════════════════════
+const feedLocs = ['Koramangala','HSR Layout','Whitefield','Indiranagar','BTM Layout','Electronic City','Marathahalli','Hebbal','JP Nagar','Jayanagar','Bellandur','Sarjapur Road','Yelahanka','Banashankari','Malleshwaram'];
+const feedSrcs = ['Housing.com','NoBroker','MagicBricks','99acres'];
+
+function randomFeed() {
+  const track = document.getElementById('feed-track');
+  const items = [];
+  for (let i = 0; i < 6; i++) {
+    const added = Math.random() < 0.6;
+    const bhk = [1,2,3][Math.floor(Math.random()*3)];
+    const loc = feedLocs[Math.floor(Math.random()*feedLocs.length)];
+    const price = (Math.floor(Math.random()*60)+10)*1000;
+    const src = feedSrcs[Math.floor(Math.random()*feedSrcs.length)];
+    const cls = added ? 'added' : 'rented';
+    const act = added ? 'Added' : 'Rented';
+    items.push(`<div class="feed-item"><div class="feed-dot ${cls}"></div><span class="feed-action ${cls}">${act}</span> ${bhk} BHK in ${loc} — ₹${price.toLocaleString('en-IN')} <span class="feed-detail">via ${src}</span></div>`);
+  }
+  items.push(items[0]);
+  track.innerHTML = items.join('');
+}
+setInterval(randomFeed, 12000);
+
+// ═══════════════════════════════════════════════════════════════
+// GEOCODE locality → lat/lng via Photon (OSM)
+// ═══════════════════════════════════════════════════════════════
+async function geocode(locality, area) {
+  const query = [locality, area, 'Bangalore'].filter(Boolean).join(', ');
+  const cacheKey = query.toLowerCase().trim();
+  if (geoCache[cacheKey]) return geoCache[cacheKey];
+
+  try {
+    const url = `${PHOTON}?q=${encodeURIComponent(query)}&lat=12.97&lon=77.59&limit=1`;
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.features && d.features.length > 0) {
+      const [lng, lat] = d.features[0].geometry.coordinates;
+      // Sanity check — must be in Bangalore area (12.7-13.2 lat, 77.3-77.9 lng)
+      if (lat > 12.5 && lat < 13.3 && lng > 77.2 && lng < 78.0) {
+        geoCache[cacheKey] = { lat, lng };
+        return { lat, lng };
+      }
+    }
+  } catch {}
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TRAVEL TIME via OSRM
+// ═══════════════════════════════════════════════════════════════
+async function getTravel(l) {
+  if (tt[l.id] !== undefined) return tt[l.id];
+
+  // Use existing coords or geocode from locality
+  let coords = null;
+  if (l.lat && l.lng) {
+    coords = { lat: l.lat, lng: l.lng };
+  } else {
+    coords = await geocode(l.locality, l.area);
+    if (coords) { l.lat = coords.lat; l.lng = coords.lng; }
+  }
+
+  if (!coords) { tt[l.id] = null; return null; }
+
+  try {
+    const r = await fetch(`${OSRM}/${SJ.lng},${SJ.lat};${coords.lng},${coords.lat}?overview=false`);
+    const d = await r.json();
+    if (d.routes?.[0]) {
+      tt[l.id] = Math.round(d.routes[0].duration / 60);
+      return tt[l.id];
+    }
+  } catch {}
+  tt[l.id] = null;
+  return null;
+}
+
+async function computeAll(list) {
+  const bar = document.getElementById('comp-bar');
+  const prog = document.getElementById('comp-prog');
+  const need = list.filter(l => tt[l.id] === undefined);
+  if (!need.length) { render(filtered); return; }
+
+  bar.classList.add('on');
+  let done = 0;
+  prog.textContent = `0 / ${need.length}`;
+
+  // Process in batches of 3 (geocode + OSRM = 2 API calls each)
+  for (let i = 0; i < need.length; i += 3) {
+    await Promise.all(need.slice(i, i + 3).map(getTravel));
+    done = Math.min(done + 3, need.length);
+    prog.textContent = `${done} / ${need.length}`;
+    // Re-render every 15 so user sees results appearing
+    if (done % 15 === 0 || done >= need.length) render(filtered);
+    // Rate limit — Photon + OSRM both free, be gentle
+    if (i + 3 < need.length) await new Promise(r => setTimeout(r, 300));
+  }
+  bar.classList.remove('on');
+  render(filtered);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LOAD DATA
+// ═══════════════════════════════════════════════════════════════
+async function load() {
+  try {
+    const r = await fetch('listings.json');
+    if (!r.ok) throw 0;
+    all = await r.json();
+    counterVal = all.length;
+    counterEl.textContent = counterVal.toLocaleString('en-IN');
+    document.getElementById('ld').remove();
+    go();
+  } catch {
+    loadDemo();
+  }
+}
+
+function loadDemo() {
+  all = [
+    {id:"h_19871485",source:"housing.com",title:"2 BHK in Hebbal Kempapura",locality:"Hebbal Kempapura",area:"",bhk:2,rent:24000,sqft:1100,furnishing:"Semi furnished",property_type:"Apartment",verified:true,posted_by:"Agent",seller_name:"GoRent In",updated_ago:"6d ago",link:"https://housing.com/rent/19871485",images:[]},
+    {id:"h_19932628",source:"housing.com",title:"2 BHK in HSR Layout",locality:"HSR Layout",area:"",bhk:2,rent:46001,sqft:1000,furnishing:"Fully furnished",property_type:"Apartment",verified:true,posted_by:"Agent",seller_name:"Sevenhills Homes",updated_ago:"1d ago",link:"https://housing.com/rent/19932628",images:[]},
+    {id:"h_19912908",source:"housing.com",title:"1 BHK in HSR Layout",locality:"HSR Layout",area:"",bhk:1,rent:24000,sqft:650,furnishing:"Semi furnished",property_type:"Builder Floor",verified:true,posted_by:"Agent",seller_name:"Sri Bhairaveshwara RE",updated_ago:"1d ago",link:"#",images:[]},
+    {id:"m_001",source:"magicbricks",title:"2 BHK in Koramangala",locality:"Koramangala",area:"",bhk:2,rent:35000,sqft:950,furnishing:"Semi furnished",property_type:"Apartment",verified:false,posted_by:"Agent",seller_name:"ABC Realty",updated_ago:"2d ago",society:"Prestige Ozone",link:"#",images:[]},
+    {id:"n_001",source:"nobroker",title:"1 BHK in BTM Layout",locality:"BTM Layout",area:"",bhk:1,rent:15000,sqft:600,furnishing:"Unfurnished",property_type:"Apartment",verified:false,posted_by:"Owner",seller_name:"Ramesh K",updated_ago:"3d ago",link:"#",images:[]},
+  ];
+  counterVal = 7476;
+  document.getElementById('ld').remove();
+  go();
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FILTER
+// ═══════════════════════════════════════════════════════════════
+function go() {
+  const bhk = document.getElementById('f-bhk').value;
+  const mn = parseInt(document.getElementById('f-min').value) || 0;
+  const mx = parseInt(document.getElementById('f-max').value) || Infinity;
+  const fur = document.getElementById('f-furn').value;
+  const src = document.getElementById('f-src').value;
+  const sort = document.getElementById('sort-sel').value;
+
+  filtered = all.filter(l => {
+    if (bhk && String(l.bhk) !== bhk && !(bhk==='5' && l.bhk>=5)) return false;
+    if (l.rent < mn) return false;
+    if (mx !== Infinity && l.rent > mx) return false;
+    if (fur) {
+      const f = (l.furnishing||'').toLowerCase();
+      if (fur==='fully' && !f.includes('fully')) return false;
+      if (fur==='semi' && !f.includes('semi')) return false;
+      if (fur==='un' && !f.includes('un')) return false;
+    }
+    if (src && l.source !== src) return false;
+    return true;
+  });
+
+  filtered.sort((a,b) => {
+    if (sort==='price-asc') return (a.rent||0)-(b.rent||0);
+    if (sort==='price-desc') return (b.rent||0)-(a.rent||0);
+    if (sort==='sqft-desc') return (b.sqft||0)-(a.sqft||0);
+    if (sort==='travel-asc') return (tt[a.id]??999)-(tt[b.id]??999);
+    return 0;
+  });
+
+  const rb = document.getElementById('res-bar');
+  rb.classList.add('on');
+  document.getElementById('res-count').innerHTML =
+    `Showing <strong>${filtered.length.toLocaleString()}</strong> of ${all.length.toLocaleString()} listings`;
+
+  render(filtered);
+  computeAll(filtered);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+function fmt(r) {
+  if (!r) return '—';
+  if (r >= 100000) return '₹' + (r/100000).toFixed(r%100000===0?0:1) + ' L';
+  return '₹' + r.toLocaleString('en-IN');
+}
+
+function render(list) {
+  const g = document.getElementById('grid');
+  if (!list.length) {
+    g.innerHTML = `<div class="empty"><div class="empty-ico">🏠</div><h3>No listings match</h3><p>Try adjusting your budget, BHK, or furnishing filters.</p></div>`;
+    return;
+  }
+
+  g.innerHTML = list.map(l => {
+    const tv = tt[l.id];
+    let tvH = '';
+    if (tv !== undefined && tv !== null) {
+      tvH = `<div class="t-badge ${tv<=MAX_MIN?'in':'out'}">🚗 ${tv} min</div>`;
+    } else if (tv === undefined) {
+      tvH = `<div class="t-badge" style="background:rgba(28,25,23,0.5)">🚗 ...</div>`;
+    }
+
+    const img = l.images?.length
+      ? `<img src="${l.images[0]}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=card-ph>🏠</div>'">`
+      : '<div class="card-ph">🏠</div>';
+
+    const bd = [];
+    if (l.verified) bd.push('<span class="b b-v">Verified</span>');
+    if (l.posted_by==='Owner') bd.push('<span class="b b-o">Owner</span>');
+    if (l.source) bd.push(`<span class="b b-s">${l.source}</span>`);
+
+    const pills = [];
+    if (l.bhk) pills.push(`${l.bhk} BHK`);
+    if (l.sqft) pills.push(`${l.sqft.toLocaleString()} sqft`);
+    if (l.furnishing) pills.push(l.furnishing);
+    if (l.property_type && l.property_type!=='Apartment') pills.push(l.property_type);
+
+    const loc = [l.locality, l.area].filter(Boolean).join(', ') || 'Bangalore';
+
+    return `<div class="card" onclick="window.open('${l.link||'#'}','_blank')">
+      <div class="card-img">${img}<div class="card-badges">${bd.join('')}</div>${tvH}</div>
+      <div class="card-body">
+        <div class="card-price">${fmt(l.rent)} <small>/mo</small></div>
+        <div class="card-pills">${pills.map(p=>`<span class="pill">${p}</span>`).join('')}</div>
+        <div class="card-loc">${l.society||loc}</div>
+        ${l.society?`<div class="card-area">${loc}</div>`:'<div class="card-area"></div>'}
+        <div class="card-foot">
+          <span class="card-seller">${l.seller_name||l.posted_by||''}</span>
+          <span class="card-upd">${l.updated_ago||''}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Enter key on inputs
+document.querySelectorAll('.fg input').forEach(el => {
+  el.addEventListener('keydown', e => { if (e.key==='Enter') go(); });
+});
+
+load();
+</script>
+</body>
+</html>
