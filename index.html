@@ -1242,7 +1242,7 @@ async function geocode(locality, area) {
 // ═══════════════════════════════════════════════════════════════
 // TRAVEL TIME via OSRM (with batching + 6AM traffic multiplier)
 // ═══════════════════════════════════════════════════════════════
-const TRAFFIC_MULTIPLIER = 1.2; // 6 AM = light traffic, just buffer for signals/turns
+const TRAFFIC_MULTIPLIER = 1.5; // 6 AM = light traffic, but OSRM is still optimistic
 const OSRM_TABLE = 'https://router.project-osrm.org/table/v1/driving';
 
 /**
