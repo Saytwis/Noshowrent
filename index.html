@@ -405,7 +405,7 @@ body {
 
 .card-img {
   width: 100%;
-  height: 190px;
+  height: 160px;
   background: var(--bg-filter);
   position: relative;
   overflow: hidden;
@@ -424,11 +424,46 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(145deg, #F3F1ED 0%, #E7E5E0 100%);
-  font-size: 36px;
-  opacity: 0.25;
+  gap: 6px;
+  position: relative;
+}
+
+.card-ph.ph-0 { background: linear-gradient(135deg, #E8E4DF, #D6D0C8); }
+.card-ph.ph-1 { background: linear-gradient(135deg, #E4DDD6, #D0C8BD); }
+.card-ph.ph-2 { background: linear-gradient(135deg, #DDE4E0, #C5CEC8); }
+.card-ph.ph-3 { background: linear-gradient(135deg, #E0DDE4, #C8C5CE); }
+.card-ph.ph-4 { background: linear-gradient(135deg, #E4E0DD, #CEC8C2); }
+.card-ph.ph-5 { background: linear-gradient(135deg, #DDE0E4, #C2C8CE); }
+
+.card-ph::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(212,85,42,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(28,25,23,0.04) 0%, transparent 40%);
+}
+
+.card-ph-letter {
+  font-family: 'Instrument Serif', serif;
+  font-size: 42px;
+  color: rgba(28,25,23,0.12);
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.card-ph-text {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(28,25,23,0.18);
+  position: relative;
+  z-index: 1;
 }
 
 .card-badges {
@@ -597,7 +632,7 @@ body {
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-eyebrow">Bangalore Rentals</div>
+  <div class="hero-eyebrow">Bangalore Rentals bec its tough out here for my potti haha</div>
   <h1 class="hero-title">Find your next <em>home</em>,<br>without the bullshit.</h1>
 
   <div class="live-counter">
@@ -618,7 +653,7 @@ body {
     </div>
   </div>
 
-  <p class="hero-sub">Scraped from Housing.com · MagicBricks · 99acres · NoBroker — updated daily</p>
+  <p class="hero-sub">Scraped from Housing.com · MagicBricks · 99acres · NoBroker — updated daily da :)</p>
 </div>
 
 <!-- TRAVEL STRIP -->
@@ -715,7 +750,7 @@ const MAX_MIN = 25;
 const OSRM = 'https://router.project-osrm.org/route/v1/driving';
 const PHOTON = 'https://photon.komoot.io/api';
 
-let all = [], filtered = [], tt = {}, geoCache = {};
+let all = [], filtered = [], tt = {}, geoCache = {}, gen = 0;
 
 // ═══════════════════════════════════════════════════════════════
 // ANIMATED COUNTER
@@ -815,6 +850,7 @@ async function getTravel(l) {
 }
 
 async function computeAll(list) {
+  const myGen = gen;
   const bar = document.getElementById('comp-bar');
   const prog = document.getElementById('comp-prog');
   const need = list.filter(l => tt[l.id] === undefined);
@@ -824,14 +860,13 @@ async function computeAll(list) {
   let done = 0;
   prog.textContent = `0 / ${need.length}`;
 
-  // Process in batches of 3 (geocode + OSRM = 2 API calls each)
   for (let i = 0; i < need.length; i += 3) {
+    if (myGen !== gen) { bar.classList.remove('on'); return; } // stale, abort
     await Promise.all(need.slice(i, i + 3).map(getTravel));
+    if (myGen !== gen) { bar.classList.remove('on'); return; } // check again after await
     done = Math.min(done + 3, need.length);
     prog.textContent = `${done} / ${need.length}`;
-    // Re-render every 15 so user sees results appearing
     if (done % 15 === 0 || done >= need.length) render(filtered);
-    // Rate limit — Photon + OSRM both free, be gentle
     if (i + 3 < need.length) await new Promise(r => setTimeout(r, 300));
   }
   bar.classList.remove('on');
@@ -872,6 +907,7 @@ function loadDemo() {
 // FILTER
 // ═══════════════════════════════════════════════════════════════
 function go() {
+  gen++; // cancel any in-flight computeAll
   const bhk = document.getElementById('f-bhk').value;
   const mn = parseInt(document.getElementById('f-min').value) || 0;
   const mx = parseInt(document.getElementById('f-max').value) || Infinity;
@@ -935,9 +971,10 @@ function render(list) {
       tvH = `<div class="t-badge" style="background:rgba(28,25,23,0.5)">🚗 ...</div>`;
     }
 
-    const img = l.images?.length
-      ? `<img src="${l.images[0]}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<div class=card-ph>🏠</div>'">`
-      : '<div class="card-ph">🏠</div>';
+    const phLetter = (l.locality || l.area || 'B').charAt(0).toUpperCase();
+    const phLabel = (l.locality || l.area || 'Bangalore').substring(0, 20);
+    const phColor = 'ph-' + (((l.locality||'').length + (l.bhk||0)) % 6);
+    const img = `<div class="card-ph ${phColor}"><div class="card-ph-letter">${phLetter}</div><div class="card-ph-text">${phLabel}</div></div>`;
 
     const bd = [];
     if (l.verified) bd.push('<span class="b b-v">Verified</span>');
