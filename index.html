@@ -1336,12 +1336,18 @@ async function computeAll(list) {
   const bar = document.getElementById('comp-bar');
   const prog = document.getElementById('comp-prog');
   const need = list.filter(l => tt[l.id] === undefined);
-  if (!need.length) { render(filtered); return; }
+  
+  // If nothing to compute, just hide bar and return
+  if (!need.length) { 
+    bar.classList.remove('on');
+    return; 
+  }
 
   // Split: fast (hardcoded/cached coords) vs slow (needs Nominatim geocoding)
   const fast = need.filter(hasKnownCoords);
   const slow = need.filter(l => !hasKnownCoords(l));
 
+  // Show the bar
   bar.classList.add('on');
   let done = 0;
   const total = need.length;
@@ -1351,7 +1357,7 @@ async function computeAll(list) {
   if (fast.length > 0) {
     prog.textContent = `Batch routing ${fast.length} listings...`;
     await batchGetTravel(fast);
-    if (myGen !== gen) { bar.classList.remove('on'); return; }
+    if (myGen !== gen) return; // Don't hide bar here, let new computation handle it
     done += fast.length;
     prog.textContent = `${done} / ${total}`;
     render(filtered);
@@ -1359,17 +1365,20 @@ async function computeAll(list) {
 
   // Pass 2: Nominatim ones still need 1 per second (API rate limit)
   for (let i = 0; i < slow.length; i++) {
-    if (myGen !== gen) { bar.classList.remove('on'); return; }
+    if (myGen !== gen) return; // Don't hide bar here, let new computation handle it
     await getTravel(slow[i]);
-    if (myGen !== gen) { bar.classList.remove('on'); return; }
+    if (myGen !== gen) return;
     done++;
     prog.textContent = `${done} / ${total}`;
     if (done % 5 === 0 || i + 1 >= slow.length) render(filtered);
     if (i + 1 < slow.length) await new Promise(r => setTimeout(r, 1100));
   }
 
-  bar.classList.remove('on');
-  render(filtered);
+  // Only hide bar if we're still the current generation
+  if (myGen === gen) {
+    bar.classList.remove('on');
+    render(filtered);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
