@@ -846,126 +846,281 @@ setInterval(randomFeed, 12000);
 const BLR_BBOX = { minLat: 12.75, maxLat: 13.20, minLng: 77.35, maxLng: 77.85 };
 const NOMINATIM = 'https://nominatim.openstreetmap.org/search';
 
-// Hardcoded coords for localities Photon/Nominatim commonly get wrong
+// Hardcoded coords for 95%+ of Bangalore localities - no API calls needed!
 const KNOWN_COORDS = {
+  // ═══ MAJOR AREAS (100+ listings each) ═══
   'whitefield': { lat: 12.9698, lng: 77.7500 },
-  'electronic city': { lat: 12.8456, lng: 77.6603 },
-  'electronic city phase 1': { lat: 12.8480, lng: 77.6630 },
-  'electronic city phase i': { lat: 12.8480, lng: 77.6630 },
-  'electronic city phase 2': { lat: 12.8390, lng: 77.6590 },
-  'electronic city phase ii': { lat: 12.8390, lng: 77.6590 },
   'hsr layout': { lat: 12.9116, lng: 77.6389 },
   'hsr': { lat: 12.9116, lng: 77.6389 },
   'btm layout': { lat: 12.9166, lng: 77.6101 },
   'btm': { lat: 12.9166, lng: 77.6101 },
-  'koramangala': { lat: 12.9352, lng: 77.6245 },
-  'indiranagar': { lat: 12.9784, lng: 77.6408 },
-  'marathahalli': { lat: 12.9591, lng: 77.6974 },
   'sarjapur road': { lat: 12.9107, lng: 77.6872 },
   'sarjapur': { lat: 12.8600, lng: 77.7870 },
+  'sarjapura': { lat: 12.8600, lng: 77.7870 },
+  'thanisandra': { lat: 13.0590, lng: 77.6360 },
+  'thanisandra main road': { lat: 13.0590, lng: 77.6360 },
+  'electronic city': { lat: 12.8456, lng: 77.6603 },
+  'electronics city': { lat: 12.8456, lng: 77.6603 },
+  'electronic city phase 1': { lat: 12.8480, lng: 77.6630 },
+  'electronics city phase 1': { lat: 12.8480, lng: 77.6630 },
+  'electronic city phase 2': { lat: 12.8390, lng: 77.6590 },
+  'phase 2 electronic city': { lat: 12.8390, lng: 77.6590 },
+  'bellandur': { lat: 12.9260, lng: 77.6762 },
+  'mahadevapura': { lat: 12.9913, lng: 77.6860 },
+  'brookefield': { lat: 12.9680, lng: 77.7150 },
+  'brookfield': { lat: 12.9680, lng: 77.7150 },
+  'varthur': { lat: 12.9400, lng: 77.7400 },
+  'marathahalli': { lat: 12.9591, lng: 77.6974 },
+  'koramangala': { lat: 12.9352, lng: 77.6245 },
   'hebbal': { lat: 13.0358, lng: 77.5970 },
+  'hebbal kempapura': { lat: 13.0400, lng: 77.5950 },
+  'kempapura': { lat: 13.0400, lng: 77.5950 },
+  'devanahalli': { lat: 13.2480, lng: 77.7120 },
+  'yelahanka': { lat: 13.1005, lng: 77.5963 },
+  'indiranagar': { lat: 12.9784, lng: 77.6408 },
+  'indira nagar': { lat: 12.9784, lng: 77.6408 },
+  
+  // ═══ HIGH FREQUENCY (50-100 listings) ═══
+  'murugeshpalya': { lat: 12.9650, lng: 77.6550 },
+  'aecs layout': { lat: 12.9550, lng: 77.7000 },
+  'kaggadasapura': { lat: 12.9850, lng: 77.6750 },
+  's.g. palya': { lat: 12.9150, lng: 77.6100 },
+  'sg palya': { lat: 12.9150, lng: 77.6100 },
+  'harlur': { lat: 12.9150, lng: 77.6750 },
+  'haralur': { lat: 12.9150, lng: 77.6750 },
+  'haralur main road': { lat: 12.9150, lng: 77.6750 },
+  'harlur road': { lat: 12.9150, lng: 77.6750 },
+  'sahakara nagar': { lat: 13.0600, lng: 77.5950 },
+  'c v raman nagar': { lat: 12.9850, lng: 77.6650 },
+  'cv raman nagar': { lat: 12.9850, lng: 77.6650 },
+  'k r garden': { lat: 12.9600, lng: 77.6500 },
+  'kr garden': { lat: 12.9600, lng: 77.6500 },
+  'hoodi': { lat: 12.9888, lng: 77.7141 },
+  'kanakapura road': { lat: 12.8900, lng: 77.5700 },
+  'carmelaram': { lat: 12.9000, lng: 77.7000 },
+  'bagalur': { lat: 13.1350, lng: 77.6780 },
+  'rajajinagar': { lat: 12.9910, lng: 77.5530 },
+  'tumkur road': { lat: 13.0200, lng: 77.5100 },
+  'richmond town': { lat: 12.9630, lng: 77.6000 },
   'jp nagar': { lat: 12.9063, lng: 77.5857 },
   'jayanagar': { lat: 12.9308, lng: 77.5838 },
-  'banashankari': { lat: 12.9255, lng: 77.5468 },
-  'malleshwaram': { lat: 13.0035, lng: 77.5710 },
-  'yelahanka': { lat: 13.1005, lng: 77.5963 },
-  'bellandur': { lat: 12.9260, lng: 77.6762 },
-  'rajajinagar': { lat: 12.9910, lng: 77.5530 },
-  'bommanahalli': { lat: 12.9010, lng: 77.6230 },
-  'kr puram': { lat: 13.0098, lng: 77.6940 },
+  
+  // ═══ MEDIUM FREQUENCY (30-50 listings) ═══
+  'shabhari nagar': { lat: 13.0550, lng: 77.5900 },
+  'venkateshwara layout': { lat: 12.9100, lng: 77.6050 },
+  'kadubeesanahalli': { lat: 12.9350, lng: 77.6950 },
+  'bellari road': { lat: 13.0200, lng: 77.5950 },
+  'bellary road': { lat: 13.0200, lng: 77.5950 },
+  'munnekollal': { lat: 12.9500, lng: 77.7100 },
+  'hadosiddapura': { lat: 12.9020, lng: 77.6850 },
+  'kasavanahalli': { lat: 12.9000, lng: 77.6700 },
+  'kasavanhalli': { lat: 12.9000, lng: 77.6700 },
+  'b narayanapura': { lat: 12.9950, lng: 77.6900 },
+  'p&t layout': { lat: 13.0550, lng: 77.6350 },
+  'chokkanahalli': { lat: 13.0800, lng: 77.6300 },
+  'gummanahalli': { lat: 13.1350, lng: 77.6780 },
+  'manayata tech park': { lat: 13.0450, lng: 77.6200 },
+  'manyata tech park': { lat: 13.0450, lng: 77.6200 },
+  'hosa road': { lat: 12.8800, lng: 77.6700 },
+  'panathur': { lat: 12.9400, lng: 77.7150 },
+  'hulimavu': { lat: 12.8800, lng: 77.6100 },
+  
+  // ═══ REGULAR FREQUENCY (20-30 listings) ═══
+  'hosapalya': { lat: 12.8850, lng: 77.6200 },
+  'sri balaji krupa layout': { lat: 13.0500, lng: 77.6200 },
+  'r.k. hegde nagar': { lat: 13.0450, lng: 77.6150 },
+  'rk hegde nagar': { lat: 13.0450, lng: 77.6150 },
+  'halasuru': { lat: 12.9800, lng: 77.6150 },
+  'ulsoor': { lat: 12.9800, lng: 77.6200 },
+  'kaverappa layout': { lat: 12.9380, lng: 77.6980 },
+  'prakruthi nagar': { lat: 13.0650, lng: 77.6100 },
+  'old airport road': { lat: 12.9650, lng: 77.6500 },
+  'hal old airport road': { lat: 12.9600, lng: 77.6500 },
   'krishnarajapura': { lat: 13.0098, lng: 77.6940 },
-  'thanisandra': { lat: 13.0590, lng: 77.6360 },
-  'hoodi': { lat: 12.9888, lng: 77.7141 },
+  'kr puram': { lat: 13.0098, lng: 77.6940 },
+  'k r puram': { lat: 13.0098, lng: 77.6940 },
+  'balagere': { lat: 12.9350, lng: 77.7100 },
+  'ramamurthy nagar': { lat: 13.0150, lng: 77.6700 },
+  'rachenahalli': { lat: 13.0550, lng: 77.6100 },
+  'ejipura': { lat: 12.9400, lng: 77.6300 },
+  'banashankari': { lat: 12.9255, lng: 77.5468 },
+  'akshayanagar': { lat: 12.8850, lng: 77.6400 },
+  'horamavu': { lat: 13.0280, lng: 77.6580 },
+  'bommasandra': { lat: 12.8200, lng: 77.6800 },
+  'attibele': { lat: 12.7800, lng: 77.7700 },
+  'hoskote': { lat: 13.0700, lng: 77.7950 },
   'begur': { lat: 12.8720, lng: 77.6230 },
   'begur road': { lat: 12.8720, lng: 77.6230 },
-  'bannerghatta': { lat: 12.8870, lng: 77.5960 },
-  'bannerghatta main road': { lat: 12.8870, lng: 77.5960 },
+  'anchepalya': { lat: 12.9550, lng: 77.7100 },
+  'arakere': { lat: 12.8900, lng: 77.6150 },
+  
+  // ═══ LOWER FREQUENCY (10-20 listings) ═══
+  'viswa vihar': { lat: 12.9880, lng: 77.6700 },
+  'eastwood township': { lat: 12.9100, lng: 77.6800 },
+  'gm palya': { lat: 12.9850, lng: 77.6680 },
+  'balaji layout': { lat: 12.9900, lng: 77.6800 },
+  'garebhavipalya': { lat: 12.9050, lng: 77.6100 },
+  'gb palya': { lat: 12.9050, lng: 77.6080 },
+  'kogilu': { lat: 13.0700, lng: 77.6050 },
+  'doddanekundi': { lat: 12.9700, lng: 77.6950 },
+  'hal 3rd stage': { lat: 12.9600, lng: 77.6450 },
+  'kartik nagar': { lat: 12.9500, lng: 77.6600 },
+  'hoysala nagar': { lat: 12.9750, lng: 77.6350 },
+  'devin paradise enclave': { lat: 13.0850, lng: 77.6350 },
+  'kudlu gate': { lat: 12.8850, lng: 77.6350 },
+  'kudlu': { lat: 12.8800, lng: 77.6400 },
+  'muneshwara nagar': { lat: 12.8800, lng: 77.6250 },
+  'new tippasandra': { lat: 12.9600, lng: 77.6500 },
+  'hosur road': { lat: 12.8700, lng: 77.6400 },
+  'nagashetty halli': { lat: 13.0350, lng: 77.5850 },
+  'dooravani nagar': { lat: 12.9950, lng: 77.6650 },
+  'malleshpalya': { lat: 12.9850, lng: 77.6800 },
+  'ashok nagar': { lat: 12.9700, lng: 77.5850 },
+  'talaghattapura': { lat: 12.8600, lng: 77.5700 },
+  'ambalipura': { lat: 12.9050, lng: 77.6850 },
+  'vinayaka nagar': { lat: 12.9600, lng: 77.6550 },
+  'vidyaranyapura': { lat: 13.0850, lng: 77.5550 },
+  'defence colony': { lat: 12.9750, lng: 77.6380 },
+  'lbs nagar': { lat: 12.9900, lng: 77.6750 },
+  'lakshminarayana pura': { lat: 12.9550, lng: 77.7100 },
+  'sadanandanagar': { lat: 12.9700, lng: 77.6700 },
+  'bennigana halli': { lat: 12.9700, lng: 77.6700 },
+  'ferns city': { lat: 12.9550, lng: 77.6650 },
+  'binny pete': { lat: 12.9730, lng: 77.5750 },
+  'jagajeevanram nagar': { lat: 12.9720, lng: 77.5720 },
+  'cooke town': { lat: 12.9950, lng: 77.6100 },
+  'jakkur': { lat: 13.0750, lng: 77.5900 },
+  'gunjur': { lat: 12.9250, lng: 77.7300 },
+  'anagalapura': { lat: 13.1200, lng: 77.5900 },
+  'budigere cross': { lat: 13.0050, lng: 77.7500 },
+  'budigere': { lat: 13.0050, lng: 77.7400 },
+  'narayanapura': { lat: 13.0100, lng: 77.6650 },
+  '7th phase jp nagar': { lat: 12.8800, lng: 77.5850 },
+  'nallurhalli': { lat: 12.9600, lng: 77.7400 },
+  'yeswanthpur': { lat: 13.0200, lng: 77.5500 },
+  'yeshwanthpur': { lat: 13.0200, lng: 77.5500 },
+  'seegehalli': { lat: 13.0500, lng: 77.7500 },
+  'choodasandra': { lat: 12.8900, lng: 77.6900 },
+  'prithvi layout': { lat: 12.9650, lng: 77.7350 },
+  'jalahalli': { lat: 13.0450, lng: 77.5400 },
+  'teachers colony': { lat: 12.9350, lng: 77.5850 },
+  'doddakannelli': { lat: 12.9100, lng: 77.6800 },
+  'chambenahalli': { lat: 13.0900, lng: 77.6400 },
+  'kaikondrahalli': { lat: 12.9050, lng: 77.6800 },
+  'adarsh palm retreat': { lat: 12.9200, lng: 77.6800 },
+  'singasandra': { lat: 12.8750, lng: 77.6450 },
+  'gottigere': { lat: 12.8700, lng: 77.5900 },
+  'kadugodi': { lat: 12.9900, lng: 77.7600 },
+  'domlur': { lat: 12.9610, lng: 77.6380 },
+  'domlur layout': { lat: 12.9610, lng: 77.6380 },
+  'bommanahalli': { lat: 12.9010, lng: 77.6230 },
+  'old madras road': { lat: 12.9900, lng: 77.6600 },
   'bannerghatta road': { lat: 12.8870, lng: 77.5960 },
-  'kengeri': { lat: 12.9100, lng: 77.4830 },
-  'mahadevapura': { lat: 12.9913, lng: 77.6860 },
-  'varthur': { lat: 12.9400, lng: 77.7400 },
-  'bagalur': { lat: 13.1350, lng: 77.6780 },
-  'devanahalli': { lat: 13.2480, lng: 77.7120 },
+  'bannerghatta main road': { lat: 12.8870, lng: 77.5960 },
+  'bannerghatta': { lat: 12.8870, lng: 77.5960 },
+  'bilekahalli': { lat: 12.8950, lng: 77.6100 },
+  'hongasandra': { lat: 12.8850, lng: 77.6300 },
+  'uttarahalli': { lat: 12.9000, lng: 77.5400 },
+  'uttarahalli manavarthekaval': { lat: 12.9000, lng: 77.5400 },
+  'jeevan bima nagar': { lat: 12.9550, lng: 77.6500 },
+  'banaswadi': { lat: 13.0100, lng: 77.6450 },
+  'hbr layout': { lat: 13.0350, lng: 77.6150 },
+  'kalyan nagar': { lat: 13.0250, lng: 77.6400 },
+  'kammanahalli': { lat: 13.0150, lng: 77.6350 },
   'hennur': { lat: 13.0400, lng: 77.6370 },
   'hennur road': { lat: 13.0400, lng: 77.6370 },
-  'old madras road': { lat: 12.9900, lng: 77.6600 },
+  'hennur main road': { lat: 13.0400, lng: 77.6370 },
+  'nagavara': { lat: 13.0450, lng: 77.6200 },
+  'kasturi nagar': { lat: 13.0100, lng: 77.6600 },
+  'kothanur': { lat: 13.0670, lng: 77.6200 },
+  'kannur': { lat: 13.0560, lng: 77.6340 },
+  'kannuru': { lat: 13.0560, lng: 77.6340 },
+  
+  // ═══ LESS COMMON BUT IMPORTANT ═══
+  'frazer town': { lat: 12.9940, lng: 77.6130 },
+  'cox town': { lat: 12.9950, lng: 77.6100 },
+  'benson town': { lat: 13.0000, lng: 77.6050 },
+  'rt nagar': { lat: 13.0200, lng: 77.5950 },
+  'malleshwaram': { lat: 13.0035, lng: 77.5710 },
+  'basavanagudi': { lat: 12.9420, lng: 77.5750 },
+  'wilson garden': { lat: 12.9430, lng: 77.5970 },
+  'lavelle road': { lat: 12.9700, lng: 77.5963 },
+  'mg road': { lat: 12.9756, lng: 77.6066 },
+  'brigade road': { lat: 12.9720, lng: 77.6070 },
+  'cunningham road': { lat: 12.9870, lng: 77.5870 },
+  'shivajinagar': { lat: 12.9850, lng: 77.6000 },
+  'vijayanagar': { lat: 12.9700, lng: 77.5350 },
+  'nagarbhavi': { lat: 12.9600, lng: 77.5100 },
+  'peenya': { lat: 13.0300, lng: 77.5200 },
+  'kengeri': { lat: 12.9100, lng: 77.4830 },
+  'mysore road': { lat: 12.9400, lng: 77.5200 },
+  'konanakunte': { lat: 12.8800, lng: 77.5650 },
+  'kumaraswamy layout': { lat: 12.9050, lng: 77.5600 },
+  'padmanabhanagar': { lat: 12.9150, lng: 77.5500 },
+  'girinagar': { lat: 12.9350, lng: 77.5500 },
+  'hanumanthanagar': { lat: 12.9400, lng: 77.5600 },
+  'chamarajpet': { lat: 12.9570, lng: 77.5700 },
+  'chamrajpet': { lat: 12.9570, lng: 77.5700 },
+  'basaveshwaranagar': { lat: 12.9850, lng: 77.5350 },
+  'majestic': { lat: 12.9770, lng: 77.5720 },
+  'lingarajapuram': { lat: 13.0050, lng: 77.6200 },
+  'sadashivanagar': { lat: 13.0050, lng: 77.5800 },
+  'dollars colony': { lat: 13.0100, lng: 77.5850 },
+  'sanjaynagar': { lat: 13.0300, lng: 77.5750 },
+  'sanjay nagar': { lat: 13.0300, lng: 77.5750 },
+  'vivek nagar': { lat: 12.9600, lng: 77.6150 },
+  'iblur': { lat: 12.9200, lng: 77.6600 },
+  'agara': { lat: 12.9150, lng: 77.6450 },
   'outer ring road': { lat: 12.9540, lng: 77.6950 },
   'orr': { lat: 12.9540, lng: 77.6950 },
   'silk board': { lat: 12.9170, lng: 77.6230 },
   'silkboard': { lat: 12.9170, lng: 77.6230 },
-  'domlur': { lat: 12.9610, lng: 77.6380 },
-  'richmond town': { lat: 12.9630, lng: 77.6000 },
-  'lavelle road': { lat: 12.9700, lng: 77.5963 },
-  'mg road': { lat: 12.9756, lng: 77.6066 },
-  'brigade road': { lat: 12.9720, lng: 77.6070 },
-  'basavanagudi': { lat: 12.9420, lng: 77.5750 },
-  'wilson garden': { lat: 12.9430, lng: 77.5970 },
-  'frazer town': { lat: 12.9940, lng: 77.6130 },
-  'cunningham road': { lat: 12.9870, lng: 77.5870 },
-  'horamavu': { lat: 13.0280, lng: 77.6580 },
-  'kothanur': { lat: 13.0670, lng: 77.6200 },
-  'kannur': { lat: 13.0560, lng: 77.6340 },
-  'kannuru': { lat: 13.0560, lng: 77.6340 },
   'devarabisanahalli': { lat: 12.9380, lng: 77.7010 },
-  'gummanahalli': { lat: 13.1350, lng: 77.6780 },
-  'hadosiddapura': { lat: 12.9020, lng: 77.6850 },
-  'thirupalya': { lat: 12.8200, lng: 77.6600 },
-  'huvinayakanahalli': { lat: 13.1600, lng: 77.6500 },
-  'kadugodi': { lat: 12.9900, lng: 77.7600 },
-  'brookefield': { lat: 12.9680, lng: 77.7150 },
-  'brookfield': { lat: 12.9680, lng: 77.7150 },
   'kundanahalli': { lat: 12.9570, lng: 77.7130 },
   'kundalahalli': { lat: 12.9570, lng: 77.7130 },
-  'nagavara': { lat: 13.0450, lng: 77.6200 },
-  'nagawara': { lat: 13.0450, lng: 77.6200 },
-  'kasturi nagar': { lat: 13.0100, lng: 77.6600 },
-  'kasturinagar': { lat: 13.0100, lng: 77.6600 },
-  'ramamurthy nagar': { lat: 13.0150, lng: 77.6700 },
-  'banaswadi': { lat: 13.0100, lng: 77.6450 },
-  'cv raman nagar': { lat: 12.9850, lng: 77.6650 },
-  'hbr layout': { lat: 13.0350, lng: 77.6150 },
-  'kalyan nagar': { lat: 13.0250, lng: 77.6400 },
-  'kammanahalli': { lat: 13.0150, lng: 77.6350 },
-  'lingarajapuram': { lat: 13.0050, lng: 77.6200 },
-  'rt nagar': { lat: 13.0200, lng: 77.5950 },
-  'sanjaynagar': { lat: 13.0300, lng: 77.5750 },
-  'sadashivanagar': { lat: 13.0050, lng: 77.5800 },
-  'dollars colony': { lat: 13.0100, lng: 77.5850 },
-  'benson town': { lat: 13.0000, lng: 77.6050 },
-  'cox town': { lat: 12.9950, lng: 77.6100 },
-  'ulsoor': { lat: 12.9800, lng: 77.6200 },
-  'vivek nagar': { lat: 12.9600, lng: 77.6150 },
-  'ejipura': { lat: 12.9400, lng: 77.6300 },
-  'jeevan bima nagar': { lat: 12.9550, lng: 77.6500 },
-  'new bel road': { lat: 13.0300, lng: 77.5600 },
-  'yeshwanthpur': { lat: 13.0200, lng: 77.5500 },
-  'peenya': { lat: 13.0300, lng: 77.5200 },
-  'nagarbhavi': { lat: 12.9600, lng: 77.5100 },
-  'vijayanagar': { lat: 12.9700, lng: 77.5350 },
-  'basaveshwaranagar': { lat: 12.9850, lng: 77.5350 },
-  'majestic': { lat: 12.9770, lng: 77.5720 },
-  'gandhinagar': { lat: 12.9780, lng: 77.5800 },
-  'shivajinagar': { lat: 12.9850, lng: 77.6000 },
-  'sampangiram nagar': { lat: 12.9650, lng: 77.5900 },
-  'chamrajpet': { lat: 12.9570, lng: 77.5700 },
-  'chamarajpet': { lat: 12.9570, lng: 77.5700 },
-  'hanumanthanagar': { lat: 12.9400, lng: 77.5600 },
-  'girinagar': { lat: 12.9350, lng: 77.5500 },
-  'kumaraswamy layout': { lat: 12.9050, lng: 77.5600 },
-  'padmanabhanagar': { lat: 12.9150, lng: 77.5500 },
-  'uttarahalli': { lat: 12.9000, lng: 77.5400 },
-  'kanakapura road': { lat: 12.8900, lng: 77.5700 },
+  'thubarahalli': { lat: 12.9600, lng: 77.7200 },
+  'yemalur': { lat: 12.9550, lng: 77.6700 },
+  'kodihalli': { lat: 12.9650, lng: 77.6450 },
   'anjanapura': { lat: 12.8650, lng: 77.5700 },
-  'hulimavu': { lat: 12.8800, lng: 77.6100 },
-  'arekere': { lat: 12.8900, lng: 77.6150 },
-  'bilekahalli': { lat: 12.8950, lng: 77.6100 },
-  'hongasandra': { lat: 12.8850, lng: 77.6300 },
-  'singasandra': { lat: 12.8750, lng: 77.6450 },
-  'hosa road': { lat: 12.8800, lng: 77.6700 },
-  'akshayanagar': { lat: 12.8850, lng: 77.6400 },
-  'gottigere': { lat: 12.8700, lng: 77.5900 },
-  'iblur': { lat: 12.9200, lng: 77.6600 },
-  'agara': { lat: 12.9150, lng: 77.6450 },
+  'junnasandra': { lat: 12.9000, lng: 77.6850 },
+  'somasundarapalya': { lat: 12.9100, lng: 77.6350 },
+  'parappana agrahara': { lat: 12.8400, lng: 77.6600 },
+  'green glen layout': { lat: 12.9200, lng: 77.6750 },
+  'huvinayakanahalli': { lat: 13.1600, lng: 77.6500 },
+  'thirupalya': { lat: 12.8200, lng: 77.6600 },
+  'yelahanka new town': { lat: 13.1050, lng: 77.6000 },
+  'yelahanka airforce base': { lat: 13.1100, lng: 77.6050 },
+  'chikkagubbi': { lat: 13.0700, lng: 77.6500 },
+  'chikkagubbi village': { lat: 13.0700, lng: 77.6500 },
+  
+  // ═══ GENERIC SECTOR/STAGE/PHASE (matched by fuzzy logic) ═══
+  'sector 1': { lat: 12.9150, lng: 77.6350 },
+  'sector 2': { lat: 12.9100, lng: 77.6400 },
+  'sector 3': { lat: 12.9050, lng: 77.6450 },
+  'sector 4': { lat: 12.9100, lng: 77.6500 },
+  'sector 5': { lat: 12.9050, lng: 77.6350 },
+  'sector 6': { lat: 12.9000, lng: 77.6400 },
+  'sector 7': { lat: 12.9000, lng: 77.6300 },
+  'stage 1': { lat: 12.9150, lng: 77.6100 },
+  'stage 2': { lat: 12.9100, lng: 77.6150 },
+  'stage 3': { lat: 12.9780, lng: 77.6400 },
+  'phase 1': { lat: 12.8480, lng: 77.6630 },
+  'phase 2': { lat: 12.8390, lng: 77.6590 },
+  'phase i': { lat: 12.8480, lng: 77.6630 },
+  'phase ii': { lat: 12.8390, lng: 77.6590 },
+  '1st block': { lat: 12.9380, lng: 77.6150 },
+  '2nd block': { lat: 12.9350, lng: 77.6180 },
+  '3rd block': { lat: 12.9320, lng: 77.6200 },
+  '4th block': { lat: 12.9350, lng: 77.6250 },
+  '5th block': { lat: 12.9380, lng: 77.6280 },
+  '6th block': { lat: 12.9320, lng: 77.6300 },
+  '7th block': { lat: 12.9280, lng: 77.6250 },
+  '8th block': { lat: 12.9300, lng: 77.6350 },
+  'btm 2nd stage': { lat: 12.9100, lng: 77.6150 },
+  'btm layout 2nd stage': { lat: 12.9100, lng: 77.6150 },
+  '1st block koramangala': { lat: 12.9380, lng: 77.6150 },
+  
+  // ═══ SPECIFIC SECTORS WITH AREA ═══
   'sector 1 hsr layout': { lat: 12.9150, lng: 77.6350 },
   'sector 2 hsr layout': { lat: 12.9100, lng: 77.6400 },
   'sector 3 hsr layout': { lat: 12.9050, lng: 77.6450 },
@@ -974,7 +1129,6 @@ const KNOWN_COORDS = {
   'sector 6 hsr layout': { lat: 12.9000, lng: 77.6400 },
   'sector 7 hsr layout': { lat: 12.9000, lng: 77.6300 },
   'btm 1st stage': { lat: 12.9150, lng: 77.6100 },
-  'btm 2nd stage': { lat: 12.9100, lng: 77.6150 },
   'jp nagar 1st phase': { lat: 12.9100, lng: 77.5850 },
   'jp nagar 2nd phase': { lat: 12.9050, lng: 77.5800 },
   'jp nagar 3rd phase': { lat: 12.8950, lng: 77.5850 },
@@ -1003,8 +1157,6 @@ const KNOWN_COORDS = {
   'jayanagar 7th block': { lat: 12.9150, lng: 77.5850 },
   'jayanagar 8th block': { lat: 12.9120, lng: 77.5800 },
   'jayanagar 9th block': { lat: 12.9080, lng: 77.5850 },
-  'hebbal kempapura': { lat: 13.0400, lng: 77.5950 },
-  'kempapura': { lat: 13.0400, lng: 77.5950 },
 };
 
 // Convert KNOWN_COORDS keys to array for fuzzy matching
@@ -1088,8 +1240,71 @@ async function geocode(locality, area) {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// TRAVEL TIME via OSRM
+// TRAVEL TIME via OSRM (with batching + 6AM traffic multiplier)
 // ═══════════════════════════════════════════════════════════════
+const TRAFFIC_MULTIPLIER = 1.2; // 6 AM = light traffic, just buffer for signals/turns
+const OSRM_TABLE = 'https://router.project-osrm.org/table/v1/driving';
+
+/**
+ * Batch OSRM table API — gets travel times from St. Joseph's to multiple destinations in ONE call
+ * OSRM table API: /table/v1/driving/lng,lat;lng,lat;lng,lat?sources=0
+ * sources=0 means "from first coord (St. Joseph's) to all others"
+ */
+async function batchGetTravel(listings) {
+  // Filter to ones that have coords and need travel time
+  const withCoords = listings.filter(l => {
+    if (tt[l.id] !== undefined) return false;
+    if (l.lat && l.lng) return true;
+    const coords = findKnownCoords(l.locality) || findKnownCoords(l.area);
+    if (coords) { l.lat = coords.lat; l.lng = coords.lng; return true; }
+    return false;
+  });
+
+  if (!withCoords.length) return;
+
+  // OSRM table API can handle ~100 coords per request
+  const BATCH_SIZE = 50;
+  
+  for (let i = 0; i < withCoords.length; i += BATCH_SIZE) {
+    const batch = withCoords.slice(i, i + BATCH_SIZE);
+    
+    // Build coords string: St. Joseph's first, then all destinations
+    const coordsStr = `${SJ.lng},${SJ.lat};` + batch.map(l => `${l.lng},${l.lat}`).join(';');
+    
+    try {
+      const url = `${OSRM_TABLE}/${coordsStr}?sources=0&annotations=duration`;
+      const r = await fetch(url);
+      const d = await r.json();
+      
+      if (d.code === 'Ok' && d.durations && d.durations[0]) {
+        // durations[0] = array of times from St. Joseph's (source 0) to each destination
+        const times = d.durations[0];
+        batch.forEach((l, idx) => {
+          // times[0] is to itself (0), times[1] is first destination, etc.
+          const rawMin = times[idx + 1];
+          if (rawMin !== null && rawMin !== undefined) {
+            tt[l.id] = Math.round((rawMin / 60) * TRAFFIC_MULTIPLIER);
+          } else {
+            tt[l.id] = null;
+          }
+        });
+      }
+    } catch (e) {
+      console.error('OSRM batch failed:', e);
+      // Fall back to marking as null
+      batch.forEach(l => { if (tt[l.id] === undefined) tt[l.id] = null; });
+    }
+    
+    // Small delay between batches to be nice to OSRM
+    if (i + BATCH_SIZE < withCoords.length) {
+      await new Promise(r => setTimeout(r, 200));
+    }
+  }
+}
+
+/**
+ * Single listing travel time (fallback for Nominatim-geocoded ones)
+ */
 async function getTravel(l) {
   if (tt[l.id] !== undefined) return tt[l.id];
 
@@ -1108,7 +1323,7 @@ async function getTravel(l) {
     const r = await fetch(`${OSRM}/${SJ.lng},${SJ.lat};${coords.lng},${coords.lat}?overview=false`);
     const d = await r.json();
     if (d.routes?.[0]) {
-      tt[l.id] = Math.round(d.routes[0].duration / 60);
+      tt[l.id] = Math.round((d.routes[0].duration / 60) * TRAFFIC_MULTIPLIER);
       return tt[l.id];
     }
   } catch {}
@@ -1123,27 +1338,26 @@ async function computeAll(list) {
   const need = list.filter(l => tt[l.id] === undefined);
   if (!need.length) { render(filtered); return; }
 
-  // Split: fast (hardcoded/cached) vs slow (needs Nominatim)
+  // Split: fast (hardcoded/cached coords) vs slow (needs Nominatim geocoding)
   const fast = need.filter(hasKnownCoords);
   const slow = need.filter(l => !hasKnownCoords(l));
 
   bar.classList.add('on');
   let done = 0;
   const total = need.length;
-  prog.textContent = `0 / ${total} (${fast.length} fast, ${slow.length} slow)`;
+  prog.textContent = `0 / ${total}`;
 
-  // Pass 1: blast through hardcoded ones (no rate limit needed, just OSRM)
-  for (let i = 0; i < fast.length; i += 10) {
+  // Pass 1: BATCH all hardcoded ones in one OSRM call (super fast!)
+  if (fast.length > 0) {
+    prog.textContent = `Batch routing ${fast.length} listings...`;
+    await batchGetTravel(fast);
     if (myGen !== gen) { bar.classList.remove('on'); return; }
-    await Promise.all(fast.slice(i, i + 10).map(getTravel));
-    if (myGen !== gen) { bar.classList.remove('on'); return; }
-    done += Math.min(10, fast.length - i);
+    done += fast.length;
     prog.textContent = `${done} / ${total}`;
-    if (done % 30 === 0 || i + 10 >= fast.length) render(filtered);
-    await new Promise(r => setTimeout(r, 100));
+    render(filtered);
   }
 
-  // Pass 2: Nominatim ones, 1 per second
+  // Pass 2: Nominatim ones still need 1 per second (API rate limit)
   for (let i = 0; i < slow.length; i++) {
     if (myGen !== gen) { bar.classList.remove('on'); return; }
     await getTravel(slow[i]);
