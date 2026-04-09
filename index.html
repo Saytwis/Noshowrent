@@ -855,7 +855,9 @@ const KNOWN_COORDS = {
   'electronic city phase 2': { lat: 12.8390, lng: 77.6590 },
   'electronic city phase ii': { lat: 12.8390, lng: 77.6590 },
   'hsr layout': { lat: 12.9116, lng: 77.6389 },
+  'hsr': { lat: 12.9116, lng: 77.6389 },
   'btm layout': { lat: 12.9166, lng: 77.6101 },
+  'btm': { lat: 12.9166, lng: 77.6101 },
   'koramangala': { lat: 12.9352, lng: 77.6245 },
   'indiranagar': { lat: 12.9784, lng: 77.6408 },
   'marathahalli': { lat: 12.9591, lng: 77.6974 },
@@ -874,17 +876,23 @@ const KNOWN_COORDS = {
   'krishnarajapura': { lat: 13.0098, lng: 77.6940 },
   'thanisandra': { lat: 13.0590, lng: 77.6360 },
   'hoodi': { lat: 12.9888, lng: 77.7141 },
+  'begur': { lat: 12.8720, lng: 77.6230 },
   'begur road': { lat: 12.8720, lng: 77.6230 },
+  'bannerghatta': { lat: 12.8870, lng: 77.5960 },
   'bannerghatta main road': { lat: 12.8870, lng: 77.5960 },
+  'bannerghatta road': { lat: 12.8870, lng: 77.5960 },
   'kengeri': { lat: 12.9100, lng: 77.4830 },
   'mahadevapura': { lat: 12.9913, lng: 77.6860 },
   'varthur': { lat: 12.9400, lng: 77.7400 },
   'bagalur': { lat: 13.1350, lng: 77.6780 },
   'devanahalli': { lat: 13.2480, lng: 77.7120 },
   'hennur': { lat: 13.0400, lng: 77.6370 },
+  'hennur road': { lat: 13.0400, lng: 77.6370 },
   'old madras road': { lat: 12.9900, lng: 77.6600 },
   'outer ring road': { lat: 12.9540, lng: 77.6950 },
+  'orr': { lat: 12.9540, lng: 77.6950 },
   'silk board': { lat: 12.9170, lng: 77.6230 },
+  'silkboard': { lat: 12.9170, lng: 77.6230 },
   'domlur': { lat: 12.9610, lng: 77.6380 },
   'richmond town': { lat: 12.9630, lng: 77.6000 },
   'lavelle road': { lat: 12.9700, lng: 77.5963 },
@@ -896,22 +904,157 @@ const KNOWN_COORDS = {
   'cunningham road': { lat: 12.9870, lng: 77.5870 },
   'horamavu': { lat: 13.0280, lng: 77.6580 },
   'kothanur': { lat: 13.0670, lng: 77.6200 },
+  'kannur': { lat: 13.0560, lng: 77.6340 },
   'kannuru': { lat: 13.0560, lng: 77.6340 },
   'devarabisanahalli': { lat: 12.9380, lng: 77.7010 },
   'gummanahalli': { lat: 13.1350, lng: 77.6780 },
   'hadosiddapura': { lat: 12.9020, lng: 77.6850 },
   'thirupalya': { lat: 12.8200, lng: 77.6600 },
   'huvinayakanahalli': { lat: 13.1600, lng: 77.6500 },
+  'kadugodi': { lat: 12.9900, lng: 77.7600 },
+  'brookefield': { lat: 12.9680, lng: 77.7150 },
+  'brookfield': { lat: 12.9680, lng: 77.7150 },
+  'kundanahalli': { lat: 12.9570, lng: 77.7130 },
+  'kundalahalli': { lat: 12.9570, lng: 77.7130 },
+  'nagavara': { lat: 13.0450, lng: 77.6200 },
+  'nagawara': { lat: 13.0450, lng: 77.6200 },
+  'kasturi nagar': { lat: 13.0100, lng: 77.6600 },
+  'kasturinagar': { lat: 13.0100, lng: 77.6600 },
+  'ramamurthy nagar': { lat: 13.0150, lng: 77.6700 },
+  'banaswadi': { lat: 13.0100, lng: 77.6450 },
+  'cv raman nagar': { lat: 12.9850, lng: 77.6650 },
+  'hbr layout': { lat: 13.0350, lng: 77.6150 },
+  'kalyan nagar': { lat: 13.0250, lng: 77.6400 },
+  'kammanahalli': { lat: 13.0150, lng: 77.6350 },
+  'lingarajapuram': { lat: 13.0050, lng: 77.6200 },
+  'rt nagar': { lat: 13.0200, lng: 77.5950 },
+  'sanjaynagar': { lat: 13.0300, lng: 77.5750 },
+  'sadashivanagar': { lat: 13.0050, lng: 77.5800 },
+  'dollars colony': { lat: 13.0100, lng: 77.5850 },
+  'benson town': { lat: 13.0000, lng: 77.6050 },
+  'cox town': { lat: 12.9950, lng: 77.6100 },
+  'ulsoor': { lat: 12.9800, lng: 77.6200 },
+  'vivek nagar': { lat: 12.9600, lng: 77.6150 },
+  'ejipura': { lat: 12.9400, lng: 77.6300 },
+  'jeevan bima nagar': { lat: 12.9550, lng: 77.6500 },
+  'new bel road': { lat: 13.0300, lng: 77.5600 },
+  'yeshwanthpur': { lat: 13.0200, lng: 77.5500 },
+  'peenya': { lat: 13.0300, lng: 77.5200 },
+  'nagarbhavi': { lat: 12.9600, lng: 77.5100 },
+  'vijayanagar': { lat: 12.9700, lng: 77.5350 },
+  'basaveshwaranagar': { lat: 12.9850, lng: 77.5350 },
+  'majestic': { lat: 12.9770, lng: 77.5720 },
+  'gandhinagar': { lat: 12.9780, lng: 77.5800 },
+  'shivajinagar': { lat: 12.9850, lng: 77.6000 },
+  'sampangiram nagar': { lat: 12.9650, lng: 77.5900 },
+  'chamrajpet': { lat: 12.9570, lng: 77.5700 },
+  'chamarajpet': { lat: 12.9570, lng: 77.5700 },
+  'hanumanthanagar': { lat: 12.9400, lng: 77.5600 },
+  'girinagar': { lat: 12.9350, lng: 77.5500 },
+  'kumaraswamy layout': { lat: 12.9050, lng: 77.5600 },
+  'padmanabhanagar': { lat: 12.9150, lng: 77.5500 },
+  'uttarahalli': { lat: 12.9000, lng: 77.5400 },
+  'kanakapura road': { lat: 12.8900, lng: 77.5700 },
+  'anjanapura': { lat: 12.8650, lng: 77.5700 },
+  'hulimavu': { lat: 12.8800, lng: 77.6100 },
+  'arekere': { lat: 12.8900, lng: 77.6150 },
+  'bilekahalli': { lat: 12.8950, lng: 77.6100 },
+  'hongasandra': { lat: 12.8850, lng: 77.6300 },
+  'singasandra': { lat: 12.8750, lng: 77.6450 },
+  'hosa road': { lat: 12.8800, lng: 77.6700 },
+  'akshayanagar': { lat: 12.8850, lng: 77.6400 },
+  'gottigere': { lat: 12.8700, lng: 77.5900 },
+  'iblur': { lat: 12.9200, lng: 77.6600 },
+  'agara': { lat: 12.9150, lng: 77.6450 },
+  'sector 1 hsr layout': { lat: 12.9150, lng: 77.6350 },
+  'sector 2 hsr layout': { lat: 12.9100, lng: 77.6400 },
+  'sector 3 hsr layout': { lat: 12.9050, lng: 77.6450 },
+  'sector 4 hsr layout': { lat: 12.9100, lng: 77.6500 },
+  'sector 5 hsr layout': { lat: 12.9050, lng: 77.6350 },
+  'sector 6 hsr layout': { lat: 12.9000, lng: 77.6400 },
+  'sector 7 hsr layout': { lat: 12.9000, lng: 77.6300 },
+  'btm 1st stage': { lat: 12.9150, lng: 77.6100 },
+  'btm 2nd stage': { lat: 12.9100, lng: 77.6150 },
+  'jp nagar 1st phase': { lat: 12.9100, lng: 77.5850 },
+  'jp nagar 2nd phase': { lat: 12.9050, lng: 77.5800 },
+  'jp nagar 3rd phase': { lat: 12.8950, lng: 77.5850 },
+  'jp nagar 4th phase': { lat: 12.8900, lng: 77.5900 },
+  'jp nagar 5th phase': { lat: 12.9000, lng: 77.5750 },
+  'jp nagar 6th phase': { lat: 12.8850, lng: 77.5800 },
+  'jp nagar 7th phase': { lat: 12.8800, lng: 77.5850 },
+  'jp nagar 8th phase': { lat: 12.8750, lng: 77.5750 },
+  'jp nagar 9th phase': { lat: 12.8700, lng: 77.5800 },
+  'koramangala 1st block': { lat: 12.9380, lng: 77.6150 },
+  'koramangala 2nd block': { lat: 12.9350, lng: 77.6180 },
+  'koramangala 3rd block': { lat: 12.9320, lng: 77.6200 },
+  'koramangala 4th block': { lat: 12.9350, lng: 77.6250 },
+  'koramangala 5th block': { lat: 12.9380, lng: 77.6280 },
+  'koramangala 6th block': { lat: 12.9320, lng: 77.6300 },
+  'koramangala 7th block': { lat: 12.9280, lng: 77.6250 },
+  'koramangala 8th block': { lat: 12.9300, lng: 77.6350 },
+  'indiranagar 1st stage': { lat: 12.9800, lng: 77.6350 },
+  'indiranagar 2nd stage': { lat: 12.9780, lng: 77.6420 },
+  'jayanagar 1st block': { lat: 12.9350, lng: 77.5800 },
+  'jayanagar 2nd block': { lat: 12.9320, lng: 77.5820 },
+  'jayanagar 3rd block': { lat: 12.9280, lng: 77.5780 },
+  'jayanagar 4th block': { lat: 12.9250, lng: 77.5830 },
+  'jayanagar 5th block': { lat: 12.9220, lng: 77.5850 },
+  'jayanagar 6th block': { lat: 12.9180, lng: 77.5800 },
+  'jayanagar 7th block': { lat: 12.9150, lng: 77.5850 },
+  'jayanagar 8th block': { lat: 12.9120, lng: 77.5800 },
+  'jayanagar 9th block': { lat: 12.9080, lng: 77.5850 },
+  'hebbal kempapura': { lat: 13.0400, lng: 77.5950 },
+  'kempapura': { lat: 13.0400, lng: 77.5950 },
 };
+
+// Convert KNOWN_COORDS keys to array for fuzzy matching
+const KNOWN_KEYS = Object.keys(KNOWN_COORDS);
+
+/**
+ * Fuzzy match a locality/area string against KNOWN_COORDS
+ * Returns coords if found, null otherwise
+ */
+function findKnownCoords(text) {
+  if (!text) return null;
+  const t = text.toLowerCase().trim();
+  
+  // 1. Exact match
+  if (KNOWN_COORDS[t]) return KNOWN_COORDS[t];
+  
+  // 2. Check if text contains any known key (e.g., "Hebbal Kempapura" contains "hebbal")
+  //    Prefer longer matches first (more specific)
+  const sortedKeys = KNOWN_KEYS.slice().sort((a, b) => b.length - a.length);
+  
+  for (const key of sortedKeys) {
+    if (t.includes(key)) {
+      return KNOWN_COORDS[key];
+    }
+  }
+  
+  // 3. Check if any known key contains the text (e.g., "hsr" is in "hsr layout")
+  for (const key of sortedKeys) {
+    if (key.includes(t) && t.length >= 3) {
+      return KNOWN_COORDS[key];
+    }
+  }
+  
+  return null;
+}
+
+/**
+ * Check if listing can use fast path (hardcoded coords or already has lat/lng)
+ */
+function hasKnownCoords(l) {
+  if (l.lat && l.lng) return true;
+  return !!(findKnownCoords(l.locality) || findKnownCoords(l.area));
+}
 
 async function geocode(locality, area) {
   const cacheKey = (locality + '|' + area).toLowerCase().trim();
   if (geoCache[cacheKey]) return geoCache[cacheKey];
 
-  // Check hardcoded first
-  const locLower = (locality || '').toLowerCase().trim();
-  const areaLower = (area || '').toLowerCase().trim();
-  const known = KNOWN_COORDS[locLower] || KNOWN_COORDS[areaLower];
+  // Check hardcoded first (with fuzzy matching)
+  const known = findKnownCoords(locality) || findKnownCoords(area);
   if (known) {
     geoCache[cacheKey] = known;
     return known;
@@ -973,14 +1116,6 @@ async function getTravel(l) {
   return null;
 }
 
-// Check if a listing will use hardcoded coords (fast) or needs Nominatim (slow)
-function hasKnownCoords(l) {
-  if (l.lat && l.lng) return true;
-  const loc = (l.locality || '').toLowerCase().trim();
-  const area = (l.area || '').toLowerCase().trim();
-  return !!(KNOWN_COORDS[loc] || KNOWN_COORDS[area]);
-}
-
 async function computeAll(list) {
   const myGen = gen;
   const bar = document.getElementById('comp-bar');
@@ -995,7 +1130,7 @@ async function computeAll(list) {
   bar.classList.add('on');
   let done = 0;
   const total = need.length;
-  prog.textContent = `0 / ${total}`;
+  prog.textContent = `0 / ${total} (${fast.length} fast, ${slow.length} slow)`;
 
   // Pass 1: blast through hardcoded ones (no rate limit needed, just OSRM)
   for (let i = 0; i < fast.length; i += 10) {
@@ -1047,6 +1182,9 @@ function loadDemo() {
     {id:"h_19912908",source:"housing.com",title:"1 BHK in HSR Layout",locality:"HSR Layout",area:"",bhk:1,rent:24000,sqft:650,furnishing:"Semi furnished",property_type:"Builder Floor",verified:true,posted_by:"Agent",seller_name:"Sri Bhairaveshwara RE",updated_ago:"1d ago",link:"#",images:[]},
     {id:"m_001",source:"magicbricks",title:"2 BHK in Koramangala",locality:"Koramangala",area:"",bhk:2,rent:35000,sqft:950,furnishing:"Semi furnished",property_type:"Apartment",verified:false,posted_by:"Agent",seller_name:"ABC Realty",updated_ago:"2d ago",society:"Prestige Ozone",link:"#",images:[]},
     {id:"n_001",source:"nobroker",title:"1 BHK in BTM Layout",locality:"BTM Layout",area:"",bhk:1,rent:15000,sqft:600,furnishing:"Unfurnished",property_type:"Apartment",verified:false,posted_by:"Owner",seller_name:"Ramesh K",updated_ago:"3d ago",link:"#",images:[]},
+    {id:"m_002",source:"magicbricks",title:"3 BHK in Whitefield",locality:"Whitefield",area:"ITPL Main Road",bhk:3,rent:55000,sqft:1800,furnishing:"Fully furnished",property_type:"Apartment",verified:true,posted_by:"Agent",seller_name:"XYZ Properties",updated_ago:"1d ago",link:"#",images:[]},
+    {id:"m_003",source:"magicbricks",title:"2 BHK in Electronic City Phase 1",locality:"Electronic City Phase 1",area:"",bhk:2,rent:22000,sqft:1050,furnishing:"Semi furnished",property_type:"Apartment",verified:false,posted_by:"Owner",seller_name:"Kumar S",updated_ago:"4d ago",link:"#",images:[]},
+    {id:"m_004",source:"magicbricks",title:"1 BHK in Marathahalli",locality:"Marathahalli",area:"Near Innovative Multiplex",bhk:1,rent:18000,sqft:550,furnishing:"Unfurnished",property_type:"Apartment",verified:false,posted_by:"Agent",seller_name:"Home Solutions",updated_ago:"2d ago",link:"#",images:[]},
   ];
   counterVal = 5850;
   document.getElementById('ld').remove();
