@@ -668,7 +668,7 @@ body {
 
   <div class="live-counter">
     <div class="live-dot"></div>
-    <span class="counter-number" id="counter">7,476</span>
+    <span class="counter-number" id="counter">5,850</span>
     <span class="counter-label">real listings scraped</span>
   </div>
 
@@ -786,11 +786,11 @@ let all = [], filtered = [], tt = {}, geoCache = {}, gen = 0;
 // ANIMATED COUNTER
 // ═══════════════════════════════════════════════════════════════
 const counterEl = document.getElementById('counter');
-let counterVal = 7476;
+let counterVal = 5850;
 
 function tickCounter() {
   const delta = Math.random() < 0.6 ? 1 : -1;
-  counterVal = Math.max(7000, counterVal + delta);
+  counterVal = Math.max(5500, counterVal + delta);
   counterEl.style.transition = 'transform 0.3s, opacity 0.3s';
   counterEl.style.transform = delta > 0 ? 'translateY(-4px)' : 'translateY(4px)';
   counterEl.style.opacity = '0.4';
@@ -1010,7 +1010,7 @@ function loadDemo() {
     {id:"m_001",source:"magicbricks",title:"2 BHK in Koramangala",locality:"Koramangala",area:"",bhk:2,rent:35000,sqft:950,furnishing:"Semi furnished",property_type:"Apartment",verified:false,posted_by:"Agent",seller_name:"ABC Realty",updated_ago:"2d ago",society:"Prestige Ozone",link:"#",images:[]},
     {id:"n_001",source:"nobroker",title:"1 BHK in BTM Layout",locality:"BTM Layout",area:"",bhk:1,rent:15000,sqft:600,furnishing:"Unfurnished",property_type:"Apartment",verified:false,posted_by:"Owner",seller_name:"Ramesh K",updated_ago:"3d ago",link:"#",images:[]},
   ];
-  counterVal = 7476;
+  counterVal = 5850;
   document.getElementById('ld').remove();
   go();
 }
