@@ -416,9 +416,13 @@ body {
   height: 100%;
   object-fit: cover;
   transition: transform 0.5s;
+  position: relative;
+  z-index: 1;
 }
 
 .card:hover .card-img img { transform: scale(1.06); }
+
+.hide-ph { display: none; }
 
 .card-ph {
   width: 100%;
@@ -961,6 +965,14 @@ async function getTravel(l) {
   return null;
 }
 
+// Check if a listing will use hardcoded coords (fast) or needs Nominatim (slow)
+function hasKnownCoords(l) {
+  if (l.lat && l.lng) return true;
+  const loc = (l.locality || '').toLowerCase().trim();
+  const area = (l.area || '').toLowerCase().trim();
+  return !!(KNOWN_COORDS[loc] || KNOWN_COORDS[area]);
+}
+
 async function computeAll(list) {
   const myGen = gen;
   const bar = document.getElementById('comp-bar');
@@ -968,19 +980,37 @@ async function computeAll(list) {
   const need = list.filter(l => tt[l.id] === undefined);
   if (!need.length) { render(filtered); return; }
 
+  // Split: fast (hardcoded/cached) vs slow (needs Nominatim)
+  const fast = need.filter(hasKnownCoords);
+  const slow = need.filter(l => !hasKnownCoords(l));
+
   bar.classList.add('on');
   let done = 0;
-  prog.textContent = `0 / ${need.length}`;
+  const total = need.length;
+  prog.textContent = `0 / ${total}`;
 
-  for (let i = 0; i < need.length; i += 3) {
-    if (myGen !== gen) { bar.classList.remove('on'); return; } // stale, abort
-    await Promise.all(need.slice(i, i + 3).map(getTravel));
-    if (myGen !== gen) { bar.classList.remove('on'); return; } // check again after await
-    done = Math.min(done + 3, need.length);
-    prog.textContent = `${done} / ${need.length}`;
-    if (done % 15 === 0 || done >= need.length) render(filtered);
-    if (i + 3 < need.length) await new Promise(r => setTimeout(r, 300));
+  // Pass 1: blast through hardcoded ones (no rate limit needed, just OSRM)
+  for (let i = 0; i < fast.length; i += 10) {
+    if (myGen !== gen) { bar.classList.remove('on'); return; }
+    await Promise.all(fast.slice(i, i + 10).map(getTravel));
+    if (myGen !== gen) { bar.classList.remove('on'); return; }
+    done += Math.min(10, fast.length - i);
+    prog.textContent = `${done} / ${total}`;
+    if (done % 30 === 0 || i + 10 >= fast.length) render(filtered);
+    await new Promise(r => setTimeout(r, 100));
   }
+
+  // Pass 2: Nominatim ones, 1 per second
+  for (let i = 0; i < slow.length; i++) {
+    if (myGen !== gen) { bar.classList.remove('on'); return; }
+    await getTravel(slow[i]);
+    if (myGen !== gen) { bar.classList.remove('on'); return; }
+    done++;
+    prog.textContent = `${done} / ${total}`;
+    if (done % 5 === 0 || i + 1 >= slow.length) render(filtered);
+    if (i + 1 < slow.length) await new Promise(r => setTimeout(r, 1100));
+  }
+
   bar.classList.remove('on');
   render(filtered);
 }
@@ -1077,16 +1107,20 @@ function render(list) {
   g.innerHTML = list.map(l => {
     const tv = tt[l.id];
     let tvH = '';
-    if (tv !== undefined && tv !== null) {
+    if (typeof tv === 'number') {
       tvH = `<div class="t-badge ${tv<=MAX_MIN?'in':'out'}">🚗 ${tv} min</div>`;
     } else if (tv === undefined) {
       tvH = `<div class="t-badge" style="background:rgba(28,25,23,0.5)">🚗 ...</div>`;
     }
+    // tv === null means geocode failed, show nothing (cleaner than showing error)
 
     const phLetter = (l.locality || l.area || 'B').charAt(0).toUpperCase();
     const phLabel = (l.locality || l.area || 'Bangalore').substring(0, 20);
     const phColor = 'ph-' + (((l.locality||'').length + (l.bhk||0)) % 6);
-    const img = `<div class="card-ph ${phColor}"><div class="card-ph-letter">${phLetter}</div><div class="card-ph-text">${phLabel}</div></div>`;
+    const ph = `<div class="card-ph ${phColor}"><div class="card-ph-letter">${phLetter}</div><div class="card-ph-text">${phLabel}</div></div>`;
+    const img = (l.images && l.images.length)
+      ? `<img src="${l.images[0]}" alt="" loading="lazy" onerror="this.onerror=null;this.parentElement.innerHTML=\`${ph.replace(/`/g,'')}\`">${ph.replace(/card-ph /,'card-ph hide-ph ')}`
+      : ph;
 
     const bd = [];
     if (l.verified) bd.push('<span class="b b-v">Verified</span>');
